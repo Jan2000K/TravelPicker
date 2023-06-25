@@ -1,0 +1,8 @@
+{
+    "ApiUrl": "https://localhost:44329/api/v1/",
+    "Controllers":{
+      "UserController":{
+        "Path":"user"
+      }
+    }
+  }

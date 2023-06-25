@@ -1,0 +1,34 @@
+@use '../../global' as g
+
+.rootContainer
+    height: 100%
+    display: grid
+    place-items: center
+    svg
+        color: g.$primaryColor
+        font-size: 8rem !important
+
+.formContainer
+    padding:4rem 2rem
+    background-color: g.$primaryBackgroundColor
+    border-radius: 10px
+    width: 80%
+    input
+        font-size: 1.3rem
+        padding: 0.4rem
+    h2
+        text-align: center
+        color: g.$primaryColor
+    
+.centerItem
+    display: grid
+    place-items: center
+
+
+
+
+ 
+/* Desktops and laptops ----------- */
+@media only screen and (min-width : 1224px) 
+    .formContainer
+        width:30%
