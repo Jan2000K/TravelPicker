@@ -8,6 +8,7 @@ using TravelPickerApp.DAL;
 using TravelPickerApp.Models;
 using TravelPickerApp.Services;
 using TravelPickerApp.Services.AppSettingsService;
+using TravelPickerApp.Stores;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromFile().GetCurrentClassLogger();
 try
@@ -34,6 +35,8 @@ try
     builder.Services.AddSingleton<IAppSettings>(appSettings);
     builder.Services.AddScoped<UserService>();
     builder.Services.AddScoped<AuthorizationService>();
+    builder.Services.AddScoped<GeoSearchService>();
+    builder.Services.AddSingleton<CountryCitiesCountStore>();
     builder.Services.AddAuthorization(options =>
         {
             options.AddPolicy(AppConstants.AuthPolicies.AdminOnly, policy => policy
