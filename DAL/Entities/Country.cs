@@ -12,8 +12,8 @@ public class Country
     public String Name { get; set; }
     [MaxLength(80)]
     public String NiceName { get; set; }
-    public String Iso3 { get; set; } = String.Empty;
-    public int NumCode { get; set; }
+    public String? Iso3 { get; set; } 
+    public int? NumCode { get; set; }
     [Required]
     public int PhoneCode { get; set; } 
 }

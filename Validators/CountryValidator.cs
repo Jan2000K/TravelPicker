@@ -1,4 +1,4 @@
-﻿using System.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
 using TravelPickerApp.DAL;
 
 namespace TravelPickerApp.Validators;

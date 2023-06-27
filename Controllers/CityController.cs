@@ -7,7 +7,7 @@ using TravelPickerApp.Services;
 
 namespace TravelPickerApp.Controllers;
 [ApiController]
-[Route("api/v1/cityController")]
+[Route("api/v1/city")]
 public class CityController:Controller
 {
     private readonly GeoSearchService _geoSearchService;
@@ -18,7 +18,7 @@ public class CityController:Controller
         _logger = logger;
     }
 
-    [HttpPost("getRandomCity")]
+    [HttpGet("getRandomCity")]
     [Authorize(policy: AppConstants.AuthPolicies.UserOrAbove)]
     public async Task<IActionResult> GetRandomCity([FromQuery]string countryCode)
     {
@@ -29,6 +29,7 @@ public class CityController:Controller
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex,"Exception throw in GetRandomCity controller method");
             return StatusCode(500);
         }
     }

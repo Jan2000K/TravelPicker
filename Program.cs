@@ -28,7 +28,9 @@ try
             .AddEnvironmentVariables()
             .Build();
     }
-
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseSqlServer(configuration.GetConnectionString("PersonalDashboardDb"))
+    );
     var appSettings = new AppSettings(configuration);
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
@@ -73,9 +75,7 @@ try
     builder.Services.AddEntityFrameworkSqlServer();
     builder.Services.AddAntiforgery();
 
-    builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlServer(configuration.GetConnectionString("PersonalDashboardDb"))
-    );
+
     builder.Services.AddControllers();
     var app = builder.Build();
 

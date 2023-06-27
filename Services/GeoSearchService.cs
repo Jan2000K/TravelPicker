@@ -10,14 +10,12 @@ namespace TravelPickerApp.Services;
 
 public class GeoSearchService
 {
-    private readonly string _apiKey;
     private readonly AppDbContext _dbContext;
     private readonly CountryCitiesCountStore _countryCitiesCountStore;
     
 
-    public GeoSearchService(AppSettings appSettings,AppDbContext dbContext,CountryCitiesCountStore countryCitiesCountStore)
+    public GeoSearchService(AppDbContext dbContext,CountryCitiesCountStore countryCitiesCountStore)
     {
-        _apiKey = appSettings.ApiKeys.TomTomKey;
         _dbContext = dbContext;
         _countryCitiesCountStore = countryCitiesCountStore;
     }
@@ -54,6 +52,8 @@ public class GeoSearchService
             var randomCity = content.Data.ElementAt(0);
             return new Result<RandomCityVM>(AppCode.ActionSuccess,LocationMapper.MapCityInstanceVmToRandomCityVm(randomCity),"Successfully fetched random city");
         }
+
+        requestUri = new Uri(requestUri + "&offset=" + GetRandomOffset((int)maxResultCount));
         var response = await httpClient.GetAsync(requestUri);
         var responseContent = await response.Content.ReadFromJsonAsync<CitiesResponseVM>();
         if (responseContent is null)
