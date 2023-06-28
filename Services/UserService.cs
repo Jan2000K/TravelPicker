@@ -1,16 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 using TravelPickerApp.DAL;
 using TravelPickerApp.DAL.Entities;
+using TravelPickerApp.Models;
 
 namespace TravelPickerApp.Services;
 
 public class UserService
 {
     private readonly AppDbContext _appDbContext;
+    private readonly LoggerService _logger;
 
-    public UserService(AppDbContext appDbContext)
+    public UserService(AppDbContext appDbContext, LoggerService logger)
     {
-        this._appDbContext = appDbContext;
+        _appDbContext = appDbContext;
+        _logger = logger;
     }
 
     public async Task<User?> GetUserByUsername(string username)
@@ -19,4 +23,15 @@ public class UserService
     public async Task<User?> GetUserById(Guid id)
         => await _appDbContext.Users.Include(x=>x.UserGroups).Where(x=>x.Id==id).FirstOrDefaultAsync();
 
+    public async Task<Guid?> GetUserIdFromClaimsPrincipal(ClaimsPrincipal User)
+    {
+        var userId = User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
+        if (userId is null)
+        {
+            await _logger.LogInformation("Cannot get User ID from Claims Principal", ActionStatusCode.UnexpectedError);
+            return null;
+        }
+
+        return Guid.Parse(userId.Value);
+    }
 }

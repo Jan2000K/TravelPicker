@@ -5,11 +5,9 @@ namespace TravelPickerApp.Validators;
 
 public class CountryValidator
 {
-    public static async Task<Boolean> CountryCodeExists(string countryCode,AppDbContext dbContext)
+    public static  Boolean CountryCodeExists(string countryCode,AppDbContext dbContext)
     {
-        return await dbContext.Countries
-            .Where(x => x.Iso == countryCode.ToUpperInvariant())
-            .Select(x => true)
-            .FirstOrDefaultAsync();
+        return  dbContext.Countries
+            .Any(x => x.Iso == countryCode.ToUpperInvariant());
     }
 }

@@ -11,8 +11,8 @@ namespace TravelPickerApp.Controllers;
 public class CityController:Controller
 {
     private readonly GeoSearchService _geoSearchService;
-    private readonly ILogger<CityController> _logger;
-    public CityController(GeoSearchService geoSearchService, ILogger<CityController> logger)
+    private readonly LoggerService _logger;
+    public CityController(GeoSearchService geoSearchService, LoggerService logger)
     {
         _geoSearchService = geoSearchService;
         _logger = logger;
@@ -24,13 +24,13 @@ public class CityController:Controller
     {
         try
         {
-            var res = await _geoSearchService.GetRandomCityInCountry(countryCode);
+            var res = await _geoSearchService.GetRandomCityInCountry(countryCode,User);
             return Ok(res);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex,"Exception throw in GetRandomCity controller method");
-            return StatusCode(500);
+           await _logger.LogException(ex);
+           return StatusCode(500);
         }
     }
 }

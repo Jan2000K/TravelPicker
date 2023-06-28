@@ -9,9 +9,9 @@ namespace TravelPickerApp.Controllers;
 public class UserController:Controller
 {
     private readonly AuthorizationService _authorizationService;
-    private readonly ILogger<UserController> _logger;
+    private readonly LoggerService _logger;
 
-    public UserController(AuthorizationService authorizationService, ILogger<UserController> logger)
+    public UserController(AuthorizationService authorizationService, LoggerService logger)
     {
         this._authorizationService = authorizationService;
         this._logger = logger;
@@ -23,7 +23,7 @@ public class UserController:Controller
         try
         {
             var result = await _authorizationService.AuthorizeUser(body.Username, body.Password, HttpContext);
-            if (result.Code == AppCode.ActionSuccess)
+            if (result.Code == ActionStatusCode.ActionSuccess)
             {
                 return Ok(result);
             }
@@ -34,7 +34,7 @@ public class UserController:Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex,"Exception thrown in Authorize controller method");
+            await _logger.LogException(ex);
             return StatusCode(500);
         }
     }
@@ -50,30 +50,30 @@ public class UserController:Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex,"Exception thrown in Logout controller method");
+            await _logger.LogException(ex);
             return StatusCode(500);
         }
     }
 
     [Route("isLoggedIn")]
     [HttpGet]
-    public ActionResult IsLoggedIn()
+    public async Task<IActionResult> IsLoggedIn()
     {
         try
         {
             var userIdentity = HttpContext.User.Identity;
             if (userIdentity is not null && userIdentity.IsAuthenticated)
             {
-                return Ok(new Result<bool>(AppCode.ActionSuccess, true, "User has a valid session"));
+                return Ok(new Result<bool>(ActionStatusCode.ActionSuccess, true, "User has a valid session"));
             }
             else
             {
-                return Ok(new Result<bool>(AppCode.ActionSuccess, false, "User has no or invalid session"));
+                return Ok(new Result<bool>(ActionStatusCode.ActionSuccess, false, "User has no or invalid session"));
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex,"Exception thrown in IsLoggedIn controller method");
+            await _logger.LogException(ex);
             return StatusCode(500);
         }
     }

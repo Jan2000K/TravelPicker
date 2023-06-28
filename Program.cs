@@ -34,11 +34,14 @@ try
     var appSettings = new AppSettings(configuration);
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
-    builder.Services.AddSingleton<IAppSettings>(appSettings);
+    builder.Services.AddScoped<LoggerService>();
+    builder.Services.AddScoped<ApiCallLoggerService>();
+    builder.Services.AddSingleton<AppSettings>();
     builder.Services.AddScoped<UserService>();
     builder.Services.AddScoped<AuthorizationService>();
     builder.Services.AddScoped<GeoSearchService>();
     builder.Services.AddSingleton<CountryCitiesCountStore>();
+    
     builder.Services.AddAuthorization(options =>
         {
             options.AddPolicy(AppConstants.AuthPolicies.AdminOnly, policy => policy

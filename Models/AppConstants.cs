@@ -20,9 +20,10 @@ public static class AppConstants
         public const string UserOrAbove = "UserOrAbove";
     }
 }
-public enum AppCode
+public enum ActionStatusCode
 {
     ActionSuccess = 0,
     ActionFailed = 1,
-    UnexpectedError = 2
+    UnexpectedError = 2,
+    ExceptionThrown  =3
 }
