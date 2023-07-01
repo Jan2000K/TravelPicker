@@ -1,11 +1,11 @@
 ﻿namespace TravelPickerApp.Models;
 
-public class KeyValueVM
+public class KeyValueVM<T,U>
 {
-    public Guid Id { get; set; }
-    public String Name { get; set; }
+    public T Id { get; set; }
+    public U Name { get; set; }
 
-    public KeyValueVM(Guid id, String name)
+    public KeyValueVM(T id,U name)
     {
         Id = id;
         Name = name;

@@ -31,7 +31,7 @@ public class LocationService
             .Select(x => new LocationVM
             {
                 Id = x.Id,
-                Country = new KeyValueVM(x.Country.Id, x.Country.NiceName),
+                Country = new KeyValueVM<string,string>(x.Country.Iso, x.Country.NiceName),
                 Latitude = x.Latitude,
                 Longitude = x.Longitude,
                 DateCreated = x.DateCreated,
@@ -55,7 +55,7 @@ public class LocationService
             .Select(x => new LocationVM
             {
                 Id = x.Id,
-                Country = new KeyValueVM(x.Country.Id, x.Country.NiceName),
+                Country = new KeyValueVM<string,string>(x.Country.Iso, x.Country.NiceName),
                 Latitude = x.Latitude,
                 Longitude = x.Longitude,
                 DateCreated = x.DateCreated,
@@ -130,7 +130,10 @@ public class LocationService
                 AppConstants.CommonMessages.UserRelated.UserNotFound);
         }
 
-        var country = await _dbContext.Countries.FindAsync(model.CountryId);
+        var country = await _dbContext.Countries
+            .Where(x => x.Iso == model.CountryCode)
+            .FirstOrDefaultAsync();
+            
         if (country is null)
         {
             return new Result<Guid?>(ActionStatusCode.UnexpectedError, null,
@@ -173,7 +176,10 @@ public class LocationService
             return new Result<Guid?>(ActionStatusCode.ActionFailed, null,
                 AppConstants.CommonMessages.LocationRelated.LocationNotFound);
         }
-        var country = await _dbContext.Countries.FindAsync(model.CountryId);
+
+        var country = await _dbContext.Countries
+            .Where(x => x.Iso == model.CountryCode)
+            .FirstOrDefaultAsync();
         if (country is null)
         {
             return new Result<Guid?>(ActionStatusCode.ActionFailed, null,

@@ -78,6 +78,8 @@ public class LocationBuilder
             DateCreated = _dateCreated,
             AssignedTo = _assignedTo,
             CreatedBy = _createdBy,
+            Country = _country,
+            
         };
     }
 }

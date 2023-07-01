@@ -54,7 +54,7 @@ public class LocationController:Controller
     #region post methods
     [HttpPost]
     [Authorize(policy:AppConstants.AuthPolicies.UserOrAbove)]
-    public async Task<IActionResult> CreateLocation(AddLocationVM model)
+    public async Task<IActionResult> CreateLocation([FromBody]AddLocationVM model)
     {
         try
         {
@@ -72,7 +72,7 @@ public class LocationController:Controller
 
     [HttpPut]
     [Authorize(policy: AppConstants.AuthPolicies.UserOrAbove)]
-    public async Task<IActionResult> EditLocation(EditLocationVM model)
+    public async Task<IActionResult> EditLocation ([FromBody]EditLocationVM model)
     {
         try
         {

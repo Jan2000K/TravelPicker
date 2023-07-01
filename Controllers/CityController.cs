@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelPickerApp.Models;
+using TravelPickerApp.Models.ControllerModels.City;
 using TravelPickerApp.Models.GeoSearch;
 using TravelPickerApp.Services;
 
@@ -16,20 +17,20 @@ public class CityController:Controller
         _geoSearchService = geoSearchService;
         _logger = logger;
     }
-
-    [HttpGet("getRandomCity")]
+    
+    [HttpPost("random")]
     [Authorize(policy: AppConstants.AuthPolicies.UserOrAbove)]
-    public async Task<IActionResult> GetRandomCity([FromQuery]string countryCode)
+    public async Task<IActionResult> GetRandomCity(RandomCityFilterVM filter)
     {
         try
         {
-            var res = await _geoSearchService.GetRandomCityInCountry(countryCode,User);
-            return Ok(res);
+           var res = await  _geoSearchService.GetRandomCity(filter, User);
+           return Ok(res);
         }
         catch (Exception ex)
         {
-           await _logger.LogExceptionAsync(ex);
-           return StatusCode(500);
+            await _logger.LogExceptionAsync(ex);
+            return StatusCode(500);
         }
     }
 }

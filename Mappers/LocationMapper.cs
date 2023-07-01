@@ -1,6 +1,6 @@
 ﻿using TravelPickerApp.DAL.Entities;
 using TravelPickerApp.Models;
-using TravelPickerApp.Models.ControllerModels.City;
+using TravelPickerApp.Models.City;
 using TravelPickerApp.Models.GeoSearch;
 using TravelPickerApp.Models.Location;
 
@@ -8,14 +8,15 @@ namespace TravelPickerApp.Mappers;
 
 public static class LocationMapper
 {
-    public static RandomCityVM MapCityInstanceVmToRandomCityVm(CityInstanceVM cityInstanceVm)
+    public static CityVM MapCityInstanceVmToRandomCityVm(CityInstanceVM cityInstanceVm)
     {
-        return new RandomCityVM 
+        return new CityVM 
         {
             CityName = cityInstanceVm.City,
             RegionName = cityInstanceVm.Region,
             Latitude = cityInstanceVm.Latitude,
-            Longitude = cityInstanceVm.Longitude
+            Longitude = cityInstanceVm.Longitude,
+            CountryCode = cityInstanceVm.CountryCode
         };
     }
 
@@ -26,7 +27,7 @@ public static class LocationMapper
             Id = locationInstance.Id,
             Latitude = locationInstance.Latitude,
             Longitude = locationInstance.Longitude,
-            Country = new KeyValueVM(locationInstance.Country.Id, locationInstance.Country.NiceName),
+            Country = new KeyValueVM<string,string>(locationInstance.Country.Iso, locationInstance.Country.NiceName),
             DateCreated = locationInstance.DateCreated,
             LocationName = locationInstance.LocationName
         };

@@ -4,8 +4,8 @@ import ShuffleRoundedIcon from "@mui/icons-material/ShuffleRounded"
 import { useState } from "react"
 import { useLogin } from "../../hooks/queries/useUsers"
 import { translationsEng } from "../../translations/translationEng"
-import { AppCode } from "../../models/AppCodes"
 import appRoutes from "../../models/AppRoutes"
+import { ActionStatusCode } from "../../models/AppCodes"
 export const LoginPage: React.FC = () => {
     const [usernameValue, setUsernameValue] = useState("")
     const [passwordValue, setPasswordValue] = useState("")
@@ -17,11 +17,11 @@ export const LoginPage: React.FC = () => {
         .then(
             (res)=>{
                 debugger
-                if(res.code == AppCode.ActionFailed){
+                if(res.code == ActionStatusCode.ActionFailed){
                     setErrorMessage(translationsEng.errorMessages.invalidCredentials)
                     setSnackbarOpened(true)
                 }
-                else if(res.code == AppCode.ActionSuccess){
+                else if(res.code == ActionStatusCode.ActionSuccess){
                     location.href ="/"
                 }
             }

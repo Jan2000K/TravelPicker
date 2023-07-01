@@ -3,6 +3,12 @@
     "Controllers":{
       "UserController":{
         "Path":"user"
+      },
+      "LocationController":{
+        "Path":"location"
+      },
+      "CityController":{
+        "Path":"city"
       }
     }
   }

@@ -18,11 +18,11 @@ public class UserController:Controller
     }
     [Route("authorize")]
     [HttpPost]
-    public async Task<IActionResult> Authorize([FromBody]AuthorizeBodyVM bodyVm)
+    public async Task<IActionResult> Authorize([FromBody]AuthorizeBodyVM model)
     {
         try
         {
-            var result = await _authorizationService.AuthorizeUser(bodyVm.Username, bodyVm.Password, HttpContext);
+            var result = await _authorizationService.AuthorizeUser(model.Username, model.Password, HttpContext);
             if (result.Code == ActionStatusCode.ActionSuccess)
             {
                 return Ok(result);

@@ -7,16 +7,22 @@ import {
 import {IndexPage} from "./pages/IndexPage/IndexPage";
 import { LoginPage } from './pages/LoginPage/LoginPage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import appRoutes from './models/AppRoutes';
+import { MyLocationsPage } from './pages/MyLocationsPage/MyLocationsPage';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: appRoutes.index,
     element: <IndexPage />,
     
   },
   {
-    path:"/login",
+    path:appRoutes.login,
     element:<LoginPage />
+  },
+  {
+    path:appRoutes.myLocations,
+    element:<MyLocationsPage />
   }
 ]);
 const queryClient = new QueryClient()

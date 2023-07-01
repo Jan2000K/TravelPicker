@@ -38,6 +38,63 @@ public static class AppConstants
             public const string CountryDoesntExist = "Supplied country does not exist";
         }
     }
+
+    public static class ContinentCountryPhoneCodes
+    {
+        public static int[] Europe = 
+        {
+            43,
+            32,
+            359,
+            385,
+            357,
+            420,
+            45,
+            372,
+            358,
+            33,
+            49,
+            30,
+            36,
+            353,
+            39,
+            371,
+            370,
+            352,
+            356,
+            31,
+            48,
+            351,
+            40,
+            421,
+            386,
+            34,
+            46,
+            355,
+            376,
+            374,
+            375,
+            387,
+            298,
+            995,
+            350,
+            354,
+            44,
+            381,
+            423,
+            389,
+            373,
+            377,
+            7,
+            378,
+            381,
+            41,
+            90,
+            380,
+            44,
+            39
+        };
+    }
 }
 public enum ActionStatusCode
 {

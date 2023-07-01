@@ -1,5 +1,5 @@
 import { IApiResult } from "../types";
-import { AppCode } from "./AppCodes";
+import { ActionStatusCode } from "./AppCodes";
 
 export default class ApiResult<T> implements IApiResult<T> {
     public code: number;
@@ -11,6 +11,6 @@ export default class ApiResult<T> implements IApiResult<T> {
         this.code = code
     }
     static ConstructUnexpectedError(){
-        return new ApiResult(AppCode.UnexpectedError,"","Unexpected error occured")
+        return new ApiResult(ActionStatusCode.UnexpectedError,"","Unexpected error occured")
     }
 }

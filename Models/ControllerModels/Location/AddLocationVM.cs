@@ -10,7 +10,7 @@ public class AddLocationVM
     [Required]
     public Decimal Latitude { get; set; }
     [Required]
-    public Guid CountryId { get; set; }
+    public String CountryCode { get; set; }
     [Required]
     public Decimal Longitude { get; set; }
 }
