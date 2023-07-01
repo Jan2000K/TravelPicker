@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TravelPickerApp.Models;
-using TravelPickerApp.Models.UserControllerModels;
+using TravelPickerApp.Models.ControllerModels.Users;
 using TravelPickerApp.Services;
 
 namespace TravelPickerApp.Controllers;
@@ -18,11 +18,11 @@ public class UserController:Controller
     }
     [Route("authorize")]
     [HttpPost]
-    public async Task<IActionResult> Authorize([FromBody]AuthorizeBody body)
+    public async Task<IActionResult> Authorize([FromBody]AuthorizeBodyVM bodyVm)
     {
         try
         {
-            var result = await _authorizationService.AuthorizeUser(body.Username, body.Password, HttpContext);
+            var result = await _authorizationService.AuthorizeUser(bodyVm.Username, bodyVm.Password, HttpContext);
             if (result.Code == ActionStatusCode.ActionSuccess)
             {
                 return Ok(result);
@@ -34,7 +34,7 @@ public class UserController:Controller
         }
         catch (Exception ex)
         {
-            await _logger.LogException(ex);
+            await _logger.LogExceptionAsync(ex);
             return StatusCode(500);
         }
     }
@@ -50,7 +50,7 @@ public class UserController:Controller
         }
         catch (Exception ex)
         {
-            await _logger.LogException(ex);
+            await _logger.LogExceptionAsync(ex);
             return StatusCode(500);
         }
     }
@@ -73,7 +73,7 @@ public class UserController:Controller
         }
         catch (Exception ex)
         {
-            await _logger.LogException(ex);
+            await _logger.LogExceptionAsync(ex);
             return StatusCode(500);
         }
     }

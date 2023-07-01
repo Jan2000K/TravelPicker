@@ -4,7 +4,7 @@ namespace TravelPickerApp.DAL.Entities;
 
 public class Country
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     [MaxLength(2)]
     public String Iso { get; set; }
     [MaxLength(80)]

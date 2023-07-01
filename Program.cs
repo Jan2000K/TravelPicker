@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using HttpClientApp.Services.AppSettingsService;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
@@ -5,6 +6,7 @@ using Microsoft.Extensions.Configuration.Json;
 using NLog;
 using NLog.Web;
 using TravelPickerApp.DAL;
+using TravelPickerApp.DAL.Entities;
 using TravelPickerApp.Models;
 using TravelPickerApp.Services;
 using TravelPickerApp.Services.AppSettingsService;
@@ -29,9 +31,13 @@ try
             .Build();
     }
     builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlServer(configuration.GetConnectionString("PersonalDashboardDb"))
+        options.UseSqlServer(configuration.GetConnectionString("TravelPickerDb"))
     );
     var appSettings = new AppSettings(configuration);
+    var contextOptions = new DbContextOptionsBuilder<AppDbContext>()
+        .UseSqlServer(configuration.GetConnectionString("TravelPickerDb"))
+        .Options;
+    var dbContext = new AppDbContext(contextOptions);
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
     builder.Services.AddScoped<LoggerService>();
@@ -41,15 +47,17 @@ try
     builder.Services.AddScoped<AuthorizationService>();
     builder.Services.AddScoped<GeoSearchService>();
     builder.Services.AddSingleton<CountryCitiesCountStore>();
-    
+    builder.Services.AddScoped<LocationService>();
     builder.Services.AddAuthorization(options =>
         {
             options.AddPolicy(AppConstants.AuthPolicies.AdminOnly, policy => policy
                 .RequireRole(AppConstants.UserRoles.Admin.ToString())
-                .RequireAuthenticatedUser());
-            options.AddPolicy(AppConstants.AuthPolicies.UserOrAbove,policy => policy
-                .RequireRole(AppConstants.UserRoles.Admin.ToString(),AppConstants.UserRoles.User.ToString())
-                .RequireAuthenticatedUser());
+                );
+            options.AddPolicy(AppConstants.AuthPolicies.UserOrAbove, policy => policy
+                .RequireRole(AppConstants.UserRoles.User.ToString(),AppConstants.UserRoles.Admin.ToString())
+                
+            );
+
         }
     );
     builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -81,7 +89,6 @@ try
 
     builder.Services.AddControllers();
     var app = builder.Build();
-
 // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
@@ -99,10 +106,19 @@ try
     app.UseHttpsRedirection();
     
     app.MapControllers();
-    app.UseAuthorization();
     app.UseAuthentication();
+    app.UseAuthorization();
 
+    dbContext.ApplicationLog.Add(new ApplicationLog
+    {
+        Id = Guid.NewGuid(),
+        ActionStatusCode = ActionStatusCode.ActionSuccess,
+        LogContent = "Started web application",
+        TimeStamp = DateTimeOffset.UtcNow
+    });
+    dbContext.SaveChanges();
     app.Run();
+
 }
 catch (Exception ex)
 {

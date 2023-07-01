@@ -12,16 +12,29 @@ namespace TravelPickerApp.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "ApplicationLog",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TimeStamp = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    ActionStatusCode = table.Column<int>(type: "int", nullable: true),
+                    LogContent = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApplicationLog", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Countries",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Iso = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
                     NiceName = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
-                    Iso3 = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NumCode = table.Column<int>(type: "int", nullable: false),
+                    Iso3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NumCode = table.Column<int>(type: "int", nullable: true),
                     PhoneCode = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -58,15 +71,40 @@ namespace TravelPickerApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "GeoDbApiCallLog",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RequestedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TimeStamp = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    ServiceName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ServiceMethodName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StatusCode = table.Column<int>(type: "int", nullable: true),
+                    AdditionalData = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GeoDbApiCallLog", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GeoDbApiCallLog_Users_RequestedById",
+                        column: x => x.RequestedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Locations",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LocationName = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     Latitude = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    CountryId = table.Column<int>(type: "int", nullable: false),
+                    CountryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Longitude = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    DateAdded = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                    AssignedToId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DateCreated = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,7 +114,19 @@ namespace TravelPickerApp.Migrations
                         column: x => x.CountryId,
                         principalTable: "Countries",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Locations_Users_AssignedToId",
+                        column: x => x.AssignedToId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Locations_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -104,9 +154,24 @@ namespace TravelPickerApp.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_GeoDbApiCallLog_RequestedById",
+                table: "GeoDbApiCallLog",
+                column: "RequestedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Locations_AssignedToId",
+                table: "Locations",
+                column: "AssignedToId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Locations_CountryId",
                 table: "Locations",
                 column: "CountryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Locations_CreatedById",
+                table: "Locations",
+                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserUserGroup_UsersId",
@@ -117,6 +182,12 @@ namespace TravelPickerApp.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ApplicationLog");
+
+            migrationBuilder.DropTable(
+                name: "GeoDbApiCallLog");
+
             migrationBuilder.DropTable(
                 name: "Locations");
 

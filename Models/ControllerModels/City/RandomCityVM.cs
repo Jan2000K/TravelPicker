@@ -1,4 +1,4 @@
-﻿namespace TravelPickerApp.Models.CityControllerModels;
+﻿namespace TravelPickerApp.Models.ControllerModels.City;
 
 public class RandomCityVM
 {

@@ -13,7 +13,7 @@ public class LoggerService
         _dbContext = dbContext;
     }
 
-    public async Task LogException(Exception ex)
+    public async Task LogExceptionAsync(Exception ex)
     {
         await _dbContext.ApplicationLog.AddAsync(new ApplicationLog
         {
@@ -25,7 +25,7 @@ public class LoggerService
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task LogInformation(String content,ActionStatusCode? statusCode)
+    public async Task LogInformationAsync(String content,ActionStatusCode? statusCode)
     {
         await _dbContext.ApplicationLog.AddAsync(new ApplicationLog
         {

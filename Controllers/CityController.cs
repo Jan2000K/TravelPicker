@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelPickerApp.Models;
-using TravelPickerApp.Models.CityControllerModels;
 using TravelPickerApp.Models.GeoSearch;
 using TravelPickerApp.Services;
 
@@ -29,7 +28,7 @@ public class CityController:Controller
         }
         catch (Exception ex)
         {
-           await _logger.LogException(ex);
+           await _logger.LogExceptionAsync(ex);
            return StatusCode(500);
         }
     }

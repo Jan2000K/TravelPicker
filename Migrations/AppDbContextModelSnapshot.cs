@@ -22,13 +22,32 @@ namespace TravelPickerApp.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("TravelPickerApp.DAL.Entities.Country", b =>
+            modelBuilder.Entity("TravelPickerApp.DAL.Entities.ApplicationLog", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("ActionStatusCode")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("LogContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("TimeStamp")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApplicationLog");
+                });
+
+            modelBuilder.Entity("TravelPickerApp.DAL.Entities.Country", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Iso")
                         .IsRequired()
@@ -59,16 +78,53 @@ namespace TravelPickerApp.Migrations
                     b.ToTable("Countries");
                 });
 
+            modelBuilder.Entity("TravelPickerApp.DAL.Entities.GeoDbApiCallLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AdditionalData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("RequestedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ServiceMethodName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ServiceName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("StatusCode")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("TimeStamp")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RequestedById");
+
+                    b.ToTable("GeoDbApiCallLog");
+                });
+
             modelBuilder.Entity("TravelPickerApp.DAL.Entities.Location", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CountryId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AssignedToId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DateAdded")
+                    b.Property<Guid>("CountryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("DateCreated")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<decimal>("Latitude")
@@ -84,7 +140,11 @@ namespace TravelPickerApp.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AssignedToId");
+
                     b.HasIndex("CountryId");
+
+                    b.HasIndex("CreatedById");
 
                     b.ToTable("Locations");
                 });
@@ -148,15 +208,42 @@ namespace TravelPickerApp.Migrations
                     b.ToTable("UserUserGroup");
                 });
 
+            modelBuilder.Entity("TravelPickerApp.DAL.Entities.GeoDbApiCallLog", b =>
+                {
+                    b.HasOne("TravelPickerApp.DAL.Entities.User", "RequestedBy")
+                        .WithMany()
+                        .HasForeignKey("RequestedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RequestedBy");
+                });
+
             modelBuilder.Entity("TravelPickerApp.DAL.Entities.Location", b =>
                 {
+                    b.HasOne("TravelPickerApp.DAL.Entities.User", "AssignedTo")
+                        .WithMany()
+                        .HasForeignKey("AssignedToId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TravelPickerApp.DAL.Entities.Country", "Country")
                         .WithMany()
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("TravelPickerApp.DAL.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AssignedTo");
+
                     b.Navigation("Country");
+
+                    b.Navigation("CreatedBy");
                 });
 
             modelBuilder.Entity("UserUserGroup", b =>

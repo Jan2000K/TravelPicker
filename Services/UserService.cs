@@ -23,12 +23,12 @@ public class UserService
     public async Task<User?> GetUserById(Guid id)
         => await _appDbContext.Users.Include(x=>x.UserGroups).Where(x=>x.Id==id).FirstOrDefaultAsync();
 
-    public async Task<Guid?> GetUserIdFromClaimsPrincipal(ClaimsPrincipal User)
+    public async Task<Guid?> GetUserIdFromClaimsPrincipal(ClaimsPrincipal user)
     {
-        var userId = User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
+        var userId = user.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
         if (userId is null)
         {
-            await _logger.LogInformation("Cannot get User ID from Claims Principal", ActionStatusCode.UnexpectedError);
+            await _logger.LogInformationAsync("Cannot get User ID from Claims Principal", ActionStatusCode.UnexpectedError);
             return null;
         }
 

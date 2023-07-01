@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TravelPickerApp.Models.UserControllerModels;
+namespace TravelPickerApp.Models.ControllerModels.Users;
 
-public class AuthorizeBody
+public class AuthorizeBodyVM
 {
     [Required]
     public string Username { get; set; } = String.Empty;

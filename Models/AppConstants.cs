@@ -19,6 +19,25 @@ public static class AppConstants
         /// </summary>
         public const string UserOrAbove = "UserOrAbove";
     }
+
+    public static class CommonMessages
+    {
+        public static class UserRelated
+        {
+            public const string ErrorProcessingData = "Error processing user data";
+            public const string UserNotFound = "User not found";
+        }
+
+        public static class LocationRelated
+        {
+            public const string LocationNotFound = "Location not found";
+        }
+
+        public static class CountryRelated
+        {
+            public const string CountryDoesntExist = "Supplied country does not exist";
+        }
+    }
 }
 public enum ActionStatusCode
 {
