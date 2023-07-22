@@ -27,4 +27,10 @@
       <Folder Include="WebUI\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="TravelPickerTests\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="TravelPickerTests\obj\project.packagespec.json" />
+      <_ContentIncludedByDefault Remove="TravelPickerTests\obj\TravelPickerTests.csproj.nuget.dgspec.json" />
+    </ItemGroup>
+
 </Project>

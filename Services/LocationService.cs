@@ -193,7 +193,7 @@ public class LocationService
         return new Result<Guid?>(ActionStatusCode.ActionSuccess, location.Id, "Location successfully edited");
     }
 
-    public async Task<Result<object?>> DeleteLocation(Guid locationId, ClaimsPrincipal user)
+    public async Task<Result<object?>> DeleteLocation(ICollection<Guid> locationIds, ClaimsPrincipal user)
     {
         var userId = await _userService.GetUserIdFromClaimsPrincipal(user);
         if (userId is null)
@@ -202,19 +202,18 @@ public class LocationService
                 AppConstants.CommonMessages.UserRelated.ErrorProcessingData);
         }
 
-        var location = await _dbContext.Locations
+        var locations = _dbContext.Locations
             .Include(x => x.AssignedTo)
-            .Where(x => x.AssignedTo.Id == userId && x.Id == locationId)
-            .FirstOrDefaultAsync();
-        if (location is null)
+            .Where(x => x.AssignedTo.Id == userId && locationIds.Contains(x.Id));
+        if (!locations.Any())
         {
             return new Result<object?>(ActionStatusCode.ActionFailed, null,
                 AppConstants.CommonMessages.LocationRelated.LocationNotFound);
         }
 
-        _dbContext.Locations.Remove(location);
+        _dbContext.Locations.RemoveRange(locations);
         await _dbContext.SaveChangesAsync();
-        await _logger.LogInformationAsync($"User with id {userId} deleted location {location.LocationName}",ActionStatusCode.ActionSuccess);
+        await _logger.LogInformationAsync($"User with id {userId} deleted {locations.Count()} locations",ActionStatusCode.ActionSuccess);
         return new Result<object?>(ActionStatusCode.ActionSuccess, null, $"Successfully deleted location");
     }
     

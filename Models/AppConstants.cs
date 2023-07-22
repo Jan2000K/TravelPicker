@@ -101,5 +101,6 @@ public enum ActionStatusCode
     ActionSuccess = 0,
     ActionFailed = 1,
     UnexpectedError = 2,
-    ExceptionThrown  =3
+    ExceptionThrown  =3,
+    ExecutedWithWarnings = 4
 }

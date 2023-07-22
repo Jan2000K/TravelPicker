@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TravelPickerApp.Models;
+using TravelPickerApp.Models.ControllerModels;
 using TravelPickerApp.Models.ControllerModels.Location;
 using TravelPickerApp.Services;
 
@@ -89,13 +90,13 @@ public class LocationController:Controller
 
     #region Delete methods
 
-    [HttpDelete("{locationId}")]
+    [HttpDelete]
     [Authorize(policy:AppConstants.AuthPolicies.UserOrAbove)]
-    public async Task<IActionResult> DeleteLocation([FromRoute] Guid locationId)
+    public async Task<IActionResult> DeleteLocation([FromBody] EntityIdsVM model)
     {
         try
         {
-            var res  = await _locationService.DeleteLocation(locationId, User);
+            var res  = await _locationService.DeleteLocation(model.EntityIds, User);
             return Ok(res);
         }
         catch (Exception ex)

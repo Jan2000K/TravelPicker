@@ -2,9 +2,7 @@
 using System.Security.Claims;
 using TravelPickerApp.DAL;
 using TravelPickerApp.DAL.Entities;
-using TravelPickerApp.Mappers;
 using TravelPickerApp.Models;
-using TravelPickerApp.Models.City;
 using TravelPickerApp.Models.ControllerModels.City;
 using TravelPickerApp.Models.GeoSearch;
 using TravelPickerApp.Models.Location;
@@ -30,12 +28,12 @@ public class GeoSearchService
 
     }
 
-    public async Task<Result<CityVM>> GetRandomCity(RandomCityFilterVM filter,ClaimsPrincipal user)
+    public async Task<Result<LocationVM>> GetRandomCity(RandomCityFilterVM filter,ClaimsPrincipal user)
     {
         var userId = await _userService.GetUserIdFromClaimsPrincipal(user);
         if (userId is null)
         {
-            return new Result<CityVM>(ActionStatusCode.UnexpectedError,null,"Error parsing user data, contact the system administrator");
+            return new Result<LocationVM>(ActionStatusCode.UnexpectedError,null,"Error parsing user data, contact the system administrator");
         }
 
         var countryCode = "";
@@ -48,18 +46,18 @@ public class GeoSearchService
             var result = await GetRandomCountry(filter.Continents);
             if (result.Code != ActionStatusCode.ActionSuccess)
             {
-                return new Result<CityVM>(result.Code, null, result.Message);
+                return new Result<LocationVM>(result.Code, null, result.Message);
             }
             countryCode = result.Data.Iso;
         }
         else
         {
-            return new Result<CityVM>(ActionStatusCode.ActionFailed, null, "Supplied location filter is not valid");
+            return new Result<LocationVM>(ActionStatusCode.ActionFailed, null, "Supplied location filter is not valid");
         }
         if (!Validators.CountryValidator.CountryCodeExists(countryCode, _dbContext))
         {
             await _logger.LogInformationAsync($"Could not find country with ISO2 code : {countryCode}",ActionStatusCode.ActionFailed);
-            return new Result<CityVM>(ActionStatusCode.ActionFailed, null,
+            return new Result<LocationVM>(ActionStatusCode.ActionFailed, null,
                 $"Country code {countryCode} not found in ISO2 standard");
            
         }
@@ -68,7 +66,7 @@ public class GeoSearchService
         var httpClient = new HttpClient();
         var requestUri =
             new Uri(
-                $"http://geodb-free-service.wirefreethought.com/v1/geo/cities?types=CITY&countryIds={countryCode}&limit=1");
+                $"http://geodb-free-service.wirefreethought.com/v1/geo/places?types=CITY&countryIds={countryCode}&limit=1");
         if (maxResultCount is null)
         {
 
@@ -76,8 +74,8 @@ public class GeoSearchService
             if (!res.IsSuccessStatusCode)
             {
                 await _apiCallLogger.LogApiCall((Guid)userId, nameof(GeoSearchService), nameof(GetRandomCity),
-                    res.StatusCode);
-                return new Result<CityVM>(ActionStatusCode.UnexpectedError, null, "Failed fetching cities");
+                    res.StatusCode,requestUri.ToString());    
+                return new Result<LocationVM>(ActionStatusCode.UnexpectedError, null, "Failed fetching cities");
                 
             }
 
@@ -85,20 +83,28 @@ public class GeoSearchService
             if (content is null)
             {
                 await _apiCallLogger.LogApiCall((Guid)userId, nameof(GeoSearchService), nameof(GetRandomCity),
-                    res.StatusCode,"Reading content from JSON returns null");
-                return new Result<CityVM>(ActionStatusCode.UnexpectedError, null, "No cities found for given country");
+                    res.StatusCode,"Reading content from JSON returns null with uri "+requestUri.ToString());
+                return new Result<LocationVM>(ActionStatusCode.UnexpectedError, null, "No cities found for given country");
             }
 
             if (!content.Data.Any())
             {
-                return new Result<CityVM>(ActionStatusCode.ActionFailed, null,
+                return new Result<LocationVM>(ActionStatusCode.ActionFailed, null,
                     $"Unable to find any cities for country code {countryCode}");
             }
             _countryCitiesCountStore.AddCountryCitiesResultCount(countryCode,content.Metadata.TotalCount);
             var randomCity = content.Data.ElementAt(0);
             await _apiCallLogger.LogApiCall((Guid)userId, nameof(GeoSearchService), nameof(GetRandomCity),
                 res.StatusCode);
-            return new Result<CityVM>(ActionStatusCode.ActionSuccess,LocationMapper.MapCityInstanceVmToRandomCityVm(randomCity),"Successfully fetched random city");
+            return new Result<LocationVM>(ActionStatusCode.ActionSuccess, new LocationVM
+                {
+                    LocationName = randomCity.Name,
+                    Country = new KeyValueVM<string, string>(randomCity.CountryCode,randomCity.Country),
+                    Latitude = randomCity.Latitude,
+                    Longitude = randomCity.Longitude,
+                    RegionName = randomCity.Region
+                }
+                ,"Successfully fetched random city");
         }
         else
         {
@@ -107,8 +113,8 @@ public class GeoSearchService
             if (!res.IsSuccessStatusCode)
             {
                 await _apiCallLogger.LogApiCall((Guid)userId, nameof(GeoSearchService), nameof(GetRandomCity),
-                    res.StatusCode);
-                return new Result<CityVM>(ActionStatusCode.UnexpectedError, null, "Failed fetching cities");
+                    res.StatusCode,requestUri.ToString());
+                return new Result<LocationVM>(ActionStatusCode.UnexpectedError, null, "Failed fetching cities");
             }
 
             var content = await res.Content.ReadFromJsonAsync<CitiesResponseVM>();
@@ -116,12 +122,12 @@ public class GeoSearchService
             {
                 await _apiCallLogger.LogApiCall((Guid)userId, nameof(GeoSearchService), nameof(GetRandomCity),
                     res.StatusCode, "Reading content from JSON returns null");
-                return new Result<CityVM>(ActionStatusCode.UnexpectedError, null, "Failed fetching cities");
+                return new Result<LocationVM>(ActionStatusCode.UnexpectedError, null, "Failed fetching cities with uri "+requestUri.ToString() );
             }
 
             if (!content.Data.Any())
             {
-                return new Result<CityVM>(ActionStatusCode.ActionFailed, null,
+                return new Result<LocationVM>(ActionStatusCode.ActionFailed, null,
                     $"Unable to find any cities for country code {countryCode}");
             }
 
@@ -129,8 +135,15 @@ public class GeoSearchService
             var randomCity = content.Data.ElementAt(0);
             await _apiCallLogger.LogApiCall((Guid)userId, nameof(GeoSearchService), nameof(GetRandomCity),
                 res.StatusCode);
-            return new Result<CityVM>(ActionStatusCode.ActionSuccess,
-                LocationMapper.MapCityInstanceVmToRandomCityVm(randomCity), "Successfully fetched random city");
+            return new Result<LocationVM>(ActionStatusCode.ActionSuccess,
+                new LocationVM
+                {
+                    LocationName = randomCity.Name,
+                    Country = new KeyValueVM<string, string>(randomCity.CountryCode,randomCity.Country),
+                    Latitude = randomCity.Latitude,
+                    Longitude = randomCity.Longitude,
+                    RegionName = randomCity.Region
+                }, "Successfully fetched random city");
         }
     }
 

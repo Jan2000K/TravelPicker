@@ -10,11 +10,14 @@ public class UserController:Controller
 {
     private readonly AuthorizationService _authorizationService;
     private readonly LoggerService _logger;
+    private readonly UserService _userService;
 
-    public UserController(AuthorizationService authorizationService, LoggerService logger)
+    public UserController(AuthorizationService authorizationService, LoggerService logger,UserService userService)
     {
-        this._authorizationService = authorizationService;
-        this._logger = logger;
+        _authorizationService = authorizationService;
+        _logger = logger;
+        _userService = userService;
+
     }
     [Route("authorize")]
     [HttpPost]
@@ -78,4 +81,33 @@ public class UserController:Controller
         }
     }
 
+    [HttpPost("add")]
+    public async Task<IActionResult> AddUser([FromBody] AddUserVM model)
+    {
+        try
+        {
+            var result = await _userService.CreateUser(model.Username, model.Password, model.UserGroups, model.Email);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            await _logger.LogExceptionAsync(ex);
+            return StatusCode(500);
+        }
+    }
+
+    [HttpGet("{userId}/deactivate")]
+    public async Task<IActionResult> DeactivateUser([FromRoute] Guid userId)
+    {
+        try
+        {
+            var result = await _userService.DeactivateUser(userId);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            await _logger.LogExceptionAsync(ex);
+            return StatusCode(500);
+        }
+    }
 }

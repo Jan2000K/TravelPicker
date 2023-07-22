@@ -11,10 +11,3 @@ export interface IRandomCityFilterVM{
     continents? : number[] | undefined
     countryCode? : string |undefined
 }
-export interface CityVM{
-    cityName:string 
-    regionName :string
-    latitude :number
-    longitude :number
-    countryCode :string
-}
