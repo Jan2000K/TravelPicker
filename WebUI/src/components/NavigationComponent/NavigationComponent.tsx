@@ -2,6 +2,7 @@ import { Tab, Tabs } from "@mui/material"
 import { useState } from "react"
 import appRoutes from "../../models/AppRoutes"
 import { useNavigate } from "react-router-dom"
+import classes from "./NavigationComponent.module.sass"
 
 export const NavigationComponent: React.FC<{activeRoute:number}> = ({activeRoute}) => {
     const [value, setValue] = useState(activeRoute)
@@ -12,7 +13,7 @@ export const NavigationComponent: React.FC<{activeRoute:number}> = ({activeRoute
 
     return (
         <Tabs
-        
+            className={classes.nav}
             value={value}
             onChange={handleChange}
             aria-label="Navigation">

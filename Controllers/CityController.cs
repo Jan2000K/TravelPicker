@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TravelPickerApp.Models;
 using TravelPickerApp.Models.ControllerModels.City;
-using TravelPickerApp.Models.GeoSearch;
 using TravelPickerApp.Services;
 
 namespace TravelPickerApp.Controllers;

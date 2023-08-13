@@ -9,14 +9,12 @@ public class AppSettings:IAppSettings
     private IConfiguration _configuration;
     public BaseLogging Logging { get; }
     public SessionSettings Session { get; }
-    public ApiKeysSettings ApiKeys { get; }
     
     public AppSettings(IConfiguration configuration)
     {
         this._configuration = configuration;
         this.Logging = new BaseLogging(configuration, SectionAccessor);
         this.Session = new SessionSettings(configuration, SectionAccessor);
-        this.ApiKeys = new ApiKeysSettings(configuration, SectionAccessor);
     }
 }
 

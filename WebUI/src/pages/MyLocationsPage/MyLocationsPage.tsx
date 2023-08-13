@@ -1,27 +1,18 @@
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
 import styles from "./MyLocationsPage.module.sass"
 import { NavigationComponent } from "../../components/NavigationComponent/NavigationComponent"
-import {
-    Alert,
-    AlertColor,
-    Button,
-    CircularProgress,
-    Snackbar,
-} from "@mui/material"
-import { Continents } from "../../models/webApi/cityModels"
+import { Alert, AlertColor, Button, Snackbar } from "@mui/material"
 import { useCallback, useEffect, useState } from "react"
 import { ActionStatusCode } from "../../models/AppCodes"
-import { MapComponent } from "../../components/MapComponent/MapComponent"
 import AddLocationTwoToneIcon from "@mui/icons-material/AddLocationTwoTone"
 import {
     DataGrid,
     GridActionsCellItem,
     GridCallbackDetails,
     GridColDef,
-    GridRowIdGetter,
     GridRowParams,
     GridRowSelectionModel,
+    GridSortModel,
     GridToolbar,
 } from "@mui/x-data-grid"
 import MapIcon from "@mui/icons-material/Map"
@@ -58,7 +49,7 @@ export const MyLocationsPage: React.FC = () => {
     )
     const handleMapActionClick = useCallback(
         (params: GridRowParams<ILocationVM>) => {
-            nav(appRoutes.index,{state:{location:params.row}})
+            nav(appRoutes.index, { state: { location: params.row } })
         },
         []
     )
@@ -102,12 +93,14 @@ export const MyLocationsPage: React.FC = () => {
             type: "actions",
             getActions: (params: GridRowParams) => [
                 <GridActionsCellItem
+                    className={styles.showOnMapIcon}
                     icon={<MapIcon />}
                     label="Show on Map"
                     title="Show on map"
                     onClick={() => handleMapActionClick(params)}
                 />,
                 <GridActionsCellItem
+                    className={styles.directionsIcon}
                     icon={<AddLocationTwoToneIcon />}
                     label="Get directions"
                     title="Get directions"
@@ -125,6 +118,13 @@ export const MyLocationsPage: React.FC = () => {
             },
         },
     }
+
+    const gridSort: GridSortModel = [
+        {
+            field: "dateCreated",
+            sort: "desc",
+        },
+    ]
     const handleRowSelection = (
         rowSelectionModel: GridRowSelectionModel,
         details: GridCallbackDetails<any>
@@ -199,6 +199,7 @@ export const MyLocationsPage: React.FC = () => {
                         initialState={initialState}
                         columns={tableColumns}
                         rows={tableRows}
+                        sortModel={gridSort}
                     />
                 </div>
             </div>

@@ -89,7 +89,7 @@ public class GeoSearchService
 
             if (!content.Data.Any())
             {
-                return new Result<LocationVM>(ActionStatusCode.ActionFailed, null,
+                return new Result<LocationVM>(ActionStatusCode.ActionSuccess, null,
                     $"Unable to find any cities for country code {countryCode}");
             }
             _countryCitiesCountStore.AddCountryCitiesResultCount(countryCode,content.Metadata.TotalCount);
@@ -127,7 +127,7 @@ public class GeoSearchService
 
             if (!content.Data.Any())
             {
-                return new Result<LocationVM>(ActionStatusCode.ActionFailed, null,
+                return new Result<LocationVM>(ActionStatusCode.ActionSuccess, null,
                     $"Unable to find any cities for country code {countryCode}");
             }
 

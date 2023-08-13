@@ -1,8 +1,5 @@
-using System.Security.Claims;
-using HttpClientApp.Services.AppSettingsService;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration.Json;
 using NLog;
 using NLog.Web;
 using TravelPickerApp.DAL;
@@ -38,6 +35,19 @@ try
         .UseSqlServer(configuration.GetConnectionString("TravelPickerDb"))
         .Options;
     var dbContext = new AppDbContext(contextOptions);
+    var loggerService = new LoggerService(dbContext);
+    if (builder.Environment.IsDevelopment())
+    {
+        try
+        {
+            var seedService = new SeedingService(loggerService, dbContext);
+            await seedService.SeedTestData();
+        }
+        catch (Exception ex)
+        {
+            await loggerService.LogExceptionAsync(ex);
+        }
+    }
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
     builder.Services.AddScoped<LoggerService>();

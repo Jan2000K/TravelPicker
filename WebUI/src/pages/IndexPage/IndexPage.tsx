@@ -27,7 +27,6 @@ export const IndexPage: React.FC = () => {
     const [snackbarOpened, setSnackbarOpened] = useState(false)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertType, setAlertType] = useState<AlertColor>("info")
-    const [searchParams,setSearchParams] = useSearchParams()
     const [location, setLocation] = useState<ILocationVM>({
         locationName: "Groningen",
         country: new KeyValueVM("NL","Netherlands"),
@@ -58,7 +57,7 @@ export const IndexPage: React.FC = () => {
     )
     useEffect(
     ()=>{
-        const location = state.location as ILocationVM
+        const location = state?.location as ILocationVM
         if(!location)
         {
             return
@@ -86,7 +85,6 @@ export const IndexPage: React.FC = () => {
         })
     }
     const addLocationHandler = () => {
-        debugger
         createLocation
             .mutateAsync({
                 CountryCode: location.country.id,

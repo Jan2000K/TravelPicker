@@ -1,15 +1,16 @@
 ﻿using System.Net;
 using TravelPickerApp.DAL;
 using TravelPickerApp.DAL.Entities;
+using TravelPickerApp.Models;
 
 namespace TravelPickerApp.Services;
 
 public class ApiCallLoggerService
 {
     private readonly AppDbContext _dbContext;
-    private ILogger<ApiCallLoggerService> _logger;
+    private LoggerService _logger;
 
-    public ApiCallLoggerService(AppDbContext dbContext,ILogger<ApiCallLoggerService> logger)
+    public ApiCallLoggerService(AppDbContext dbContext,LoggerService logger)
     {
         _dbContext = dbContext;
         _logger = logger;
@@ -20,7 +21,7 @@ public class ApiCallLoggerService
         var user = await _dbContext.Users.FindAsync(requestedBy);
         if (user is null)
         {
-            _logger.LogError($"User with GUID {requestedBy} not found in database. Cannot write into ApiCall log table");
+            await _logger.LogInformationAsync($"User with GUID {requestedBy} not found in database. Cannot write into ApiCall log table",ActionStatusCode.ActionFailed);
             return;
         }
         var LogObject = new GeoDbApiCallLog
