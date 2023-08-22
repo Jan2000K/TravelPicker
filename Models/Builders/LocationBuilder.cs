@@ -8,7 +8,7 @@ public class LocationBuilder
 
     private Guid _id;
 
-    private String _locationName= String.Empty;
+    private String _locationName = String.Empty;
 
     private Decimal _latitude;
 
@@ -18,9 +18,10 @@ public class LocationBuilder
     private DAL.Entities.User _assignedTo;
     private DAL.Entities.User _createdBy;
     private Country _country;
+    private string _region;
     public LocationBuilder WithId(Guid Id)
     {
-        this._id  = Id;
+        this._id = Id;
         return this;
     }
     public LocationBuilder WithName(string name)
@@ -62,6 +63,11 @@ public class LocationBuilder
         _country = country;
         return this;
     }
+    public LocationBuilder WithRegion(string? region)
+    {
+        _region = region;
+        return this;
+    }
     public DAL.Entities.Location Build()
     {
         if (_country is null || _longitude == default || _longitude == default || _assignedTo is null ||
@@ -79,7 +85,7 @@ public class LocationBuilder
             AssignedTo = _assignedTo,
             CreatedBy = _createdBy,
             Country = _country,
-            
+            RegionName = _region
         };
     }
 }

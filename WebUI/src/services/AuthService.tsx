@@ -5,7 +5,7 @@ import ApiResult from "../models/Result.ts";
 import { IApiResult } from "../types";
 
 export default class AuthService{
-    static HandleUnaothorizedResponse(err:AxiosError,redirectToLogin = true){
+    static HandleUnauthorizedResponse(err:AxiosError,redirectToLogin:boolean){
         if(err.response && err.response.status === 401){
             if(redirectToLogin)
                 window.location.href = "/login"

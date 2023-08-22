@@ -2,9 +2,11 @@ import { KeyValueVM } from "../KeyValueVM"
 
 export interface IAddLocationVM{
     locationName:string,
-    Latitude : number,
-    Longitude : number,
-    CountryCode : string
+    latitude : number,
+    longitude : number,
+    countryCode : string
+    regionName : string
+
 }
 
 export interface ILocationVM{
@@ -14,6 +16,6 @@ export interface ILocationVM{
     latitude:number
     country:KeyValueVM<string,string>
     longitude:number 
-    dateTimeOffset:Date
+    dateCreated:string
 }
 

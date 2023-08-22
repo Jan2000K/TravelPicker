@@ -6,13 +6,13 @@ using TravelPickerApp.Services;
 namespace TravelPickerApp.Controllers;
 [ApiController]
 [Route("api/v1/user")]
-public class UserController:Controller
+public class UserController : Controller
 {
     private readonly AuthorizationService _authorizationService;
     private readonly LoggerService _logger;
     private readonly UserService _userService;
 
-    public UserController(AuthorizationService authorizationService, LoggerService logger,UserService userService)
+    public UserController(AuthorizationService authorizationService, LoggerService logger, UserService userService)
     {
         _authorizationService = authorizationService;
         _logger = logger;
@@ -21,19 +21,12 @@ public class UserController:Controller
     }
     [Route("authorize")]
     [HttpPost]
-    public async Task<IActionResult> Authorize([FromBody]AuthorizeBodyVM model)
+    public async Task<IActionResult> Authorize([FromBody] AuthorizeBodyVM model)
     {
         try
         {
             var result = await _authorizationService.AuthorizeUser(model.Username, model.Password, HttpContext);
-            if (result.Code == ActionStatusCode.ActionSuccess)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return Unauthorized(result);
-            }
+            return Ok(result);
         }
         catch (Exception ex)
         {

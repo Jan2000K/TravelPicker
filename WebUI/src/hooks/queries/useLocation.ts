@@ -14,7 +14,7 @@ function createLocation(
     return axiosInstance
         .post(url, model)
         .then((res) => res.data)
-        .catch((err) => AuthService.HandleUnaothorizedResponse(err,false))
+        .catch((err) => AuthService.HandleUnauthorizedResponse(err,false))
 }
 
 export function useCreateLocation() {
@@ -32,7 +32,7 @@ function getUserLocations():Promise<IApiResult<ILocationVM[]>>{
     return axiosInstance
         .get(url)
         .then((res) => res.data)
-        .catch((err) => AuthService.HandleUnaothorizedResponse(err,false))
+        .catch((err) => AuthService.HandleUnauthorizedResponse(err,false))
 }
 export function useGetUserLocations(){
     return useQuery(["getUserLocations"],getUserLocations)
@@ -46,7 +46,7 @@ function deleteLocation(
      return axiosInstance
          .delete(url,{data:model})
          .then((res) => res.data)
-         .catch((err) => AuthService.HandleUnaothorizedResponse(err,false))
+         .catch((err) => AuthService.HandleUnauthorizedResponse(err,false))
  }
  
  export function useDeleteLocation() {

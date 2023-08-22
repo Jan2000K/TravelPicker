@@ -1,7 +1,6 @@
-﻿using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using TravelPickerApp.DAL;
-using TravelPickerApp.DAL.Entities;
 using TravelPickerApp.Mappers;
 using TravelPickerApp.Models;
 using TravelPickerApp.Models.Builders;
@@ -16,7 +15,7 @@ public class LocationService
     private readonly LoggerService _logger;
     private UserService _userService;
 
-    public LocationService(AppDbContext dbContext, LoggerService logger,UserService userService)
+    public LocationService(AppDbContext dbContext, LoggerService logger, UserService userService)
     {
         _dbContext = dbContext;
         _logger = logger;
@@ -25,13 +24,13 @@ public class LocationService
 
     public async Task<Result<LocationVM[]>> GetLocationsOfUser(Guid userId)
     {
-        var locations =  await _dbContext.Locations
+        var locations = await _dbContext.Locations
             .Include(x => x.Country)
             .Where(x => x.AssignedTo.Id == userId)
             .Select(x => new LocationVM
             {
                 Id = x.Id,
-                Country = new KeyValueVM<string,string>(x.Country.Iso, x.Country.NiceName),
+                Country = new KeyValueVM<string, string>(x.Country.Iso, x.Country.NiceName),
                 Latitude = x.Latitude,
                 Longitude = x.Longitude,
                 DateCreated = x.DateCreated,
@@ -49,17 +48,19 @@ public class LocationService
             return new Result<LocationVM[]>(ActionStatusCode.UnexpectedError, Array.Empty<LocationVM>(),
                 AppConstants.CommonMessages.UserRelated.ErrorProcessingData);
         }
-        var locations =  await _dbContext.Locations
+        var locations = await _dbContext.Locations
             .Include(x => x.Country)
             .Where(x => x.AssignedTo.Id == userId)
             .Select(x => new LocationVM
             {
                 Id = x.Id,
-                Country = new KeyValueVM<string,string>(x.Country.Iso, x.Country.NiceName),
+                Country = new KeyValueVM<string, string>(x.Country.Iso, x.Country.NiceName),
                 Latitude = x.Latitude,
                 Longitude = x.Longitude,
                 DateCreated = x.DateCreated,
-                LocationName = x.LocationName
+                LocationName = x.LocationName,
+                RegionName = x.RegionName
+
             })
             .ToArrayAsync();
         return new Result<LocationVM[]>(ActionStatusCode.ActionSuccess, locations,
@@ -85,7 +86,7 @@ public class LocationService
                 return new Result<LocationVM>(ActionStatusCode.ActionSuccess, location,
                     "Successfully fetched location");
             }
-            
+
         }
         else
         {
@@ -114,7 +115,7 @@ public class LocationService
         }
     }
 
-    public async Task<Result<Guid?>> AddLocation(AddLocationVM model,ClaimsPrincipal user)
+    public async Task<Result<Guid?>> AddLocation(AddLocationVM model, ClaimsPrincipal user)
     {
         var userId = await _userService.GetUserIdFromClaimsPrincipal(user);
         if (userId is null)
@@ -133,7 +134,7 @@ public class LocationService
         var country = await _dbContext.Countries
             .Where(x => x.Iso == model.CountryCode)
             .FirstOrDefaultAsync();
-            
+
         if (country is null)
         {
             return new Result<Guid?>(ActionStatusCode.UnexpectedError, null,
@@ -149,6 +150,7 @@ public class LocationService
             .WithLatitude(model.Latitude)
             .WithLongitude(model.Longitude)
             .WithCountry(country)
+            .WithRegion(model.RegionName)
             .Build();
         await _dbContext.Locations.AddAsync(location);
         await _dbContext.SaveChangesAsync();
@@ -158,7 +160,7 @@ public class LocationService
         return new Result<Guid?>(ActionStatusCode.ActionSuccess, location.Id, "Location successfully added");
     }
 
-    public async Task<Result<Guid?>> EditLocation(EditLocationVM model,ClaimsPrincipal user)
+    public async Task<Result<Guid?>> EditLocation(EditLocationVM model, ClaimsPrincipal user)
     {
         var userId = await _userService.GetUserIdFromClaimsPrincipal(user);
         if (userId is null)
@@ -213,8 +215,8 @@ public class LocationService
 
         _dbContext.Locations.RemoveRange(locations);
         await _dbContext.SaveChangesAsync();
-        await _logger.LogInformationAsync($"User with id {userId} deleted {locations.Count()} locations",ActionStatusCode.ActionSuccess);
+        await _logger.LogInformationAsync($"User with id {userId} deleted {locations.Count()} locations", ActionStatusCode.ActionSuccess);
         return new Result<object?>(ActionStatusCode.ActionSuccess, null, $"Successfully deleted location");
     }
-    
+
 }

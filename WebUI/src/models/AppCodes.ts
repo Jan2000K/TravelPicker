@@ -4,4 +4,4 @@ export const ActionStatusCode =
     ActionFailed : 1,
     UnexpectedError : 2,
     ExceptionThrown  : 3
-}
+} as const

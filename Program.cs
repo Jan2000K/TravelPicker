@@ -19,7 +19,7 @@ try
         configuration = new ConfigurationBuilder().AddJsonFile("appsettings.Development.json")
             .AddEnvironmentVariables()
             .Build();
-        
+
     }
     else
     {
@@ -64,8 +64,8 @@ try
                 .RequireRole(AppConstants.UserRoles.Admin.ToString())
                 );
             options.AddPolicy(AppConstants.AuthPolicies.UserOrAbove, policy => policy
-                .RequireRole(AppConstants.UserRoles.User.ToString(),AppConstants.UserRoles.Admin.ToString())
-                
+                .RequireRole(AppConstants.UserRoles.User.ToString(), AppConstants.UserRoles.Admin.ToString())
+
             );
 
         }
@@ -99,7 +99,7 @@ try
 
     builder.Services.AddControllers();
     var app = builder.Build();
-// Configure the HTTP request pipeline.
+    // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
@@ -114,7 +114,7 @@ try
         });
     }
     app.UseHttpsRedirection();
-    
+
     app.MapControllers();
     app.UseAuthentication();
     app.UseAuthorization();

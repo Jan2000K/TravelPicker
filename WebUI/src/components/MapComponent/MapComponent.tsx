@@ -3,7 +3,10 @@ import styles from "./MapComponent.module.sass"
 import { useEffect } from "react"
 import { LatLngExpression, latLng } from "leaflet"
 import { ILocationVM } from "../../models/webApi/locationModels"
-export const MapComponent: React.FC<{ location: ILocationVM }> = ({ location: location }) => {
+import { LocationService } from "../../services/LocationService"
+export const MapComponent: React.FC<{ location: ILocationVM }> = ({
+    location: location,
+}) => {
     return (
         <MapContainer
             className={styles.mainMapContainer}
@@ -15,23 +18,20 @@ export const MapComponent: React.FC<{ location: ILocationVM }> = ({ location: lo
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <MarkerComponent cityName={location.locationName} latlong={[location.latitude,location.longitude]}></MarkerComponent>
+            <MarkerComponent location={location}></MarkerComponent>
         </MapContainer>
     )
 }
 
-const MarkerComponent: React.FC<{ latlong: LatLngExpression,cityName:string }> = ({ latlong,cityName }) => {
+const MarkerComponent: React.FC<{ location: ILocationVM }> = ({ location }) => {
     const map = useMap()
-    useEffect(
-        ()=>{
-            map.flyTo(latlong)
-        },[latlong]
-    )
+    useEffect(() => {
+        map.flyTo([location.latitude, location.longitude])
+    }, [location])
+    let concatName = LocationService.locationToString(location)
     return (
-        <Marker position={latlong}>
-            <Popup>
-                {cityName}
-            </Popup>
+        <Marker position={[location.latitude, location.longitude]}>
+            <Popup>{concatName}</Popup>
         </Marker>
     )
 }

@@ -11,61 +11,56 @@ import {
     TextField,
 } from "@mui/material"
 import { useRandomCity } from "../../hooks/queries/useCity"
-import {  Continents } from "../../models/webApi/cityModels"
+import { Continents } from "../../models/webApi/cityModels"
 import { useEffect, useState } from "react"
 import { ActionStatusCode } from "../../models/AppCodes"
 import { MapComponent } from "../../components/MapComponent/MapComponent"
 import { useCreateLocation } from "../../hooks/queries/useLocation"
 import AuthService from "../../services/AuthService"
-import { useLocation, useNavigate, useNavigation, useSearchParams } from "react-router-dom"
+import {
+    useLocation,
+    useNavigate,
+    useNavigation,
+    useSearchParams,
+} from "react-router-dom"
 import appRoutes from "../../models/AppRoutes"
 import { ILocationVM } from "../../models/webApi/locationModels"
 import { KeyValueVM } from "../../models/KeyValueVM"
+import { translationsEng } from "../../translations/translationEng"
 
 export const IndexPage: React.FC = () => {
-    const [isLoading,setLoading] = useState(false)
+    const [isLoading, setLoading] = useState(false)
     const [snackbarOpened, setSnackbarOpened] = useState(false)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertType, setAlertType] = useState<AlertColor>("info")
     const [location, setLocation] = useState<ILocationVM>({
         locationName: "Groningen",
-        country: new KeyValueVM("NL","Netherlands"),
+        country: new KeyValueVM("NL", "Netherlands"),
         regionName: "Groningen",
         latitude: 53.21917,
         longitude: 6.56667,
-        id : "",
-        dateTimeOffset : new Date() 
+        id: "",
+        dateCreated: "",
     })
     const nav = useNavigate()
-    let {state} = useLocation()
-    useEffect(
-        ()=>{
-            setLoading(true)
-            AuthService.IsLoggedIn()
-            .then(
-                (isLogged)=>{
-                    if(isLogged){
-                        setLoading(false)
-                    }
-                    else{
-                       nav(appRoutes.login)
-                    }
-                }
-            )
-        }
-        ,[]
-    )
-    useEffect(
-    ()=>{
+    let { state } = useLocation()
+    useEffect(() => {
+        setLoading(true)
+        AuthService.IsLoggedIn().then((isLogged) => {
+            if (isLogged) {
+                setLoading(false)
+            } else {
+                nav(appRoutes.login)
+            }
+        })
+    }, [])
+    useEffect(() => {
         const location = state?.location as ILocationVM
-        if(!location)
-        {
+        if (!location) {
             return
         }
         setLocation(location)
-        
-    },[]
-    )
+    }, [])
     const cityQuery = useRandomCity({ continents: [Continents.Europe] })
     const createLocation = useCreateLocation()
     const newLocationHandler = () => {
@@ -73,24 +68,24 @@ export const IndexPage: React.FC = () => {
         cityQuery.refetch().then((res) => {
             if (res.data?.code !== ActionStatusCode.ActionSuccess) {
                 setAlertType("error")
-                setAlertMessage(cityQuery.data?.message || "Error occured")
+                setAlertMessage(translationsEng.errorMessages.unexpectedError)
                 setSnackbarOpened(true)
             } else {
                 setAlertType("success")
                 setAlertMessage(res.data.message)
                 setSnackbarOpened(true)
                 setLocation(res.data.data)
-                debugger
             }
         })
     }
     const addLocationHandler = () => {
         createLocation
             .mutateAsync({
-                CountryCode: location.country.id,
-                Latitude: location.latitude,
-                Longitude: location.longitude,
+                countryCode: location.country.id,
+                latitude: location.latitude,
+                longitude: location.longitude,
                 locationName: location.locationName,
+                regionName: location.regionName,
             })
             .then((res) => {
                 if (res.code !== ActionStatusCode.ActionSuccess) {
@@ -104,15 +99,14 @@ export const IndexPage: React.FC = () => {
                 }
             })
     }
-    if(isLoading){
-        return(
-            <CircularProgress  />
-        )
+    if (isLoading) {
+        return <CircularProgress />
     }
     return (
         <>
             <NavigationComponent activeRoute={0} />
             <Snackbar
+                autoHideDuration={2000}
                 open={snackbarOpened}
                 onClose={(e) => setSnackbarOpened(false)}
                 anchorOrigin={{ horizontal: "right", vertical: "top" }}>
@@ -121,7 +115,9 @@ export const IndexPage: React.FC = () => {
             <MapComponent location={location}></MapComponent>
             <section className={styles.mapControls}>
                 <div className={styles.flexRow}>
-                    <Button variant="contained" onClick={addLocationHandler}>Save location</Button>
+                    <Button variant="contained" onClick={addLocationHandler}>
+                        Save location
+                    </Button>
                     <Button variant="outlined" onClick={newLocationHandler}>
                         Find new location
                     </Button>
