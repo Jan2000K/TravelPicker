@@ -22,26 +22,27 @@ export const MyLocationsPage: React.FC = () => {
     const [selectedLocations, setSelectedLocations] = useState(
         [] as ILocationVM[]
     )
-    const nav = useNavigate()
     const locationQuery = useGetUserLocations()
     const locationDelete = useDeleteLocation()
     useEffect(() => {
-        if (
-            locationQuery.data?.code !== ActionStatusCode.ActionSuccess ||
-            !locationQuery.data.data
-        ) {
-            setAlertMessage(
-                locationQuery.data?.message ?? "Unexpected error occured"
-            )
-            setAlertType("error")
-            setSnackbarOpened(true)
-        } else {
-            const locations = locationQuery.data!.data.sort(
-                (a, b) =>
-                    new Date(b.dateCreated).getTime() -
-                    new Date(a.dateCreated).getTime()
-            )
-            setLocations(locations)
+        if (locationQuery.isFetched) {
+            if (
+                locationQuery.data?.code !== ActionStatusCode.ActionSuccess ||
+                !locationQuery.data?.data
+            ) {
+                setAlertMessage(
+                    locationQuery.data?.message ?? "Unexpected error occured"
+                )
+                setAlertType("error")
+                setSnackbarOpened(true)
+            } else {
+                const locations = locationQuery.data!.data.sort(
+                    (a, b) =>
+                        new Date(b.dateCreated).getTime() -
+                        new Date(a.dateCreated).getTime()
+                )
+                setLocations(locations)
+            }
         }
     }, [locationQuery.data])
     const handleDelete = () => {

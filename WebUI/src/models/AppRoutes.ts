@@ -1,7 +1,7 @@
 const appRoutes ={
     index:"/",
     login:"/login",
-    myLocations:"/myLocations"
+    myLocations:"/my-locations"
 } as const
 
 export default appRoutes

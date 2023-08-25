@@ -106,7 +106,7 @@ export const IndexPage: React.FC = () => {
         <>
             <NavigationComponent activeRoute={0} />
             <Snackbar
-                autoHideDuration={2000}
+                autoHideDuration={5000}
                 open={snackbarOpened}
                 onClose={(e) => setSnackbarOpened(false)}
                 anchorOrigin={{ horizontal: "right", vertical: "top" }}>

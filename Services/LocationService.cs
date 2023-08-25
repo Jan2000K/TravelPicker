@@ -140,6 +140,15 @@ public class LocationService
             return new Result<Guid?>(ActionStatusCode.UnexpectedError, null,
                 AppConstants.CommonMessages.CountryRelated.CountryDoesntExist);
         }
+        var userLocations = await GetLocationsOfUser((Guid)userId);
+        if (
+            userLocations.Data.Any(x => x.LocationName.ToLowerInvariant() == model.LocationName.ToLowerInvariant() &&
+            x.Country.Id.ToLowerInvariant() == model.CountryCode.ToLowerInvariant())
+            )
+        {
+            return new Result<Guid?>(ActionStatusCode.ActionFailed, null, $"Location with name {model.LocationName}" +
+                $" and country code {model.CountryCode} already exits");
+        }
 
         var location = new LocationBuilder()
             .WithId(Guid.NewGuid())

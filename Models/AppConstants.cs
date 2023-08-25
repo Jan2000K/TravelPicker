@@ -37,10 +37,14 @@ public static class AppConstants
         {
             public const string CountryDoesntExist = "Supplied country does not exist";
         }
+        public static class General
+        {
+            public const string UnexpectedError = "Unexpected error occured";
+        }
     }
     public static class ContinentCountryPhoneCodes
     {
-        public static int[] Europe = 
+        public static int[] Europe =
         {
             43,
             32,
@@ -98,8 +102,8 @@ public static class AppConstants
     {
         public static class TestUsers
         {
-            public static  readonly Guid AdminUser = new("CE651EAC-D35E-4C7F-99A4-39D48C4D2B46");
-            public static  readonly Guid NormalUser = new("C0F8B026-B01C-4A01-96AE-8D293825A87A");
+            public static readonly Guid AdminUser = new("CE651EAC-D35E-4C7F-99A4-39D48C4D2B46");
+            public static readonly Guid NormalUser = new("C0F8B026-B01C-4A01-96AE-8D293825A87A");
         }
     }
 }
@@ -108,6 +112,6 @@ public enum ActionStatusCode
     ActionSuccess = 0,
     ActionFailed = 1,
     UnexpectedError = 2,
-    ExceptionThrown  =3,
+    ExceptionThrown = 3,
     ExecutedWithWarnings = 4
 }

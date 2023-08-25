@@ -3,6 +3,10 @@
     display: flex
     flex-wrap: wrap
     gap: 2rem
+
+.dataGridContainer > *
+    flex-basis: 20%
+    
 .mainContainer
     margin-top: 1.5rem
     margin-left: 1rem
@@ -17,3 +21,10 @@
 
 .deleteContainer
     display: inline-block
+    &:hover
+        cursor: pointer
+
+@media only screen and (max-width: 1000px)
+    .dataGridContainer
+        flex-direction: column
+  
