@@ -10,7 +10,6 @@ import {
 } from "../../hooks/queries/useLocation"
 import { ILocationVM } from "../../models/webApi/locationModels"
 
-import { useNavigate } from "react-router-dom"
 import DeleteIcon from "@mui/icons-material/Delete"
 import { LocationTileComponent } from "../../components/LocationTileComponent/LocationTileComponent"
 
@@ -49,7 +48,14 @@ export const MyLocationsPage: React.FC = () => {
         if (selectedLocations.length > 0) {
             locationDelete
                 .mutateAsync({ EntityIds: selectedLocations.map((x) => x.id) })
-                .then((x) => locationQuery.refetch())
+                .then(x => {
+                    locationQuery.refetch()
+                    setAlertMessage("Successfully deleted selected locations")
+                    setSnackbarOpened(true)
+                    setAlertType("success")
+                    })
+                
+
         }
     }
     return (
