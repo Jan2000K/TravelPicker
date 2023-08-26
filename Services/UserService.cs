@@ -1,7 +1,7 @@
-﻿using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
-using TravelPickerApp.DAL;
-using TravelPickerApp.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using TravelPickerApp.Dto;
+using TravelPickerApp.Dto.Entities;
 using TravelPickerApp.Models;
 
 namespace TravelPickerApp.Services;
@@ -18,10 +18,10 @@ public class UserService
     }
 
     public async Task<User?> GetUserByUsername(string username)
-        => await _appDbContext.Users.Where(x => x.Username == username && x.Active).Include(x=>x.UserGroups).FirstOrDefaultAsync();
+        => await _appDbContext.Users.Where(x => x.Username == username && x.Active).Include(x => x.UserGroups).FirstOrDefaultAsync();
 
     public async Task<User?> GetUserById(Guid id)
-        => await _appDbContext.Users.Include(x=>x.UserGroups).Where(x=>x.Id==id && x.Active).FirstOrDefaultAsync();
+        => await _appDbContext.Users.Include(x => x.UserGroups).Where(x => x.Id == id && x.Active).FirstOrDefaultAsync();
 
     public async Task<Guid?> GetUserIdFromClaimsPrincipal(ClaimsPrincipal user)
     {
@@ -35,16 +35,16 @@ public class UserService
         return Guid.Parse(userId.Value);
     }
 
-    public async Task<Result<Guid>> CreateUser(string username, string password,ICollection<Guid> userGroups,string? email = null)
+    public async Task<Result<Guid>> CreateUser(string username, string password, ICollection<Guid> userGroups, string? email = null)
     {
         var queriedUserGroups = await _appDbContext.UserGroups
             .Where(x => userGroups.Contains(x.Id)).ToListAsync();
         foreach (var userGroupId in userGroups)
         {
-            var isInQueriedGroups =  queriedUserGroups.Where(x => x.Id == userGroupId).Select(x=>true).FirstOrDefault();
+            var isInQueriedGroups = queriedUserGroups.Where(x => x.Id == userGroupId).Select(x => true).FirstOrDefault();
             if (!isInQueriedGroups)
             {
-                await _logger.LogInformationAsync($"Request role id {userGroupId} not found",null);
+                await _logger.LogInformationAsync($"Request role id {userGroupId} not found", null);
             }
         }
 
@@ -79,7 +79,7 @@ public class UserService
 
         queriedUser.Active = false;
         await _appDbContext.SaveChangesAsync();
-        await _logger.LogInformationAsync($"User {queriedUser.Username} with id {queriedUser.Id} has been deactivated",ActionStatusCode.ActionSuccess);
+        await _logger.LogInformationAsync($"User {queriedUser.Username} with id {queriedUser.Id} has been deactivated", ActionStatusCode.ActionSuccess);
         return new Result<object>(ActionStatusCode.ActionSuccess, null,
             $"User {queriedUser.Username} with id {queriedUser.Id} has been deactivated");
     }

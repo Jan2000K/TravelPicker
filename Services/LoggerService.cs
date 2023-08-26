@@ -1,5 +1,5 @@
-﻿using TravelPickerApp.DAL;
-using TravelPickerApp.DAL.Entities;
+﻿using TravelPickerApp.Dto;
+using TravelPickerApp.Dto.Entities;
 using TravelPickerApp.Models;
 
 namespace TravelPickerApp.Services;

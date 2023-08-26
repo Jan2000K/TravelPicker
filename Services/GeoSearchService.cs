@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Text.Json;
-using TravelPickerApp.DAL;
-using TravelPickerApp.DAL.Entities;
+using TravelPickerApp.Dto;
+using TravelPickerApp.Dto.Entities;
 using TravelPickerApp.Models;
 using TravelPickerApp.Models.ControllerModels.City;
 using TravelPickerApp.Models.GeoSearch;

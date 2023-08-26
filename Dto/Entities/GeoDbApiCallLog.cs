@@ -1,4 +1,4 @@
-﻿namespace TravelPickerApp.DAL.Entities;
+﻿namespace TravelPickerApp.Dto.Entities;
 
 public class GeoDbApiCallLog:BaseApiLog
 {

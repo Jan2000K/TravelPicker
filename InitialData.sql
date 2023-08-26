@@ -1,22 +1,6 @@
 USE [TravelPicker]
 BEGIN TRANSACTION 
-INSERT [dbo].[UserGroups] ([Id], [Name]) VALUES (N'd3879c65-a5e2-48fa-9e65-7da129062974', N'User')
 
-INSERT [dbo].[UserGroups] ([Id], [Name]) VALUES (N'9f325469-1363-4fce-9715-9724ce9ef4af', N'Admin')
-
-INSERT [dbo].[Users] ([Id], [Username], [Email], [Password], [Active], [LastLogin]) VALUES (N'14cce367-07cc-4a5c-bd1e-8c9f7d250b1c', N'Janez', N'kjanez1337@gmail.com', 0x532EAABD9574880DBF76B9B8CC00832C20A6EC113D682299550D7A6E0F345E25, 1, NULL)
-
-INSERT [dbo].[UserUserGroup] ([UserGroupsId], [UsersId]) VALUES (N'd3879c65-a5e2-48fa-9e65-7da129062974', N'14cce367-07cc-4a5c-bd1e-8c9f7d250b1c')
-
-INSERT [dbo].[UserUserGroup] ([UserGroupsId], [UsersId]) VALUES (N'9f325469-1363-4fce-9715-9724ce9ef4af', N'14cce367-07cc-4a5c-bd1e-8c9f7d250b1c')
-
-INSERT [dbo].[GeoDbApiCallLog] ([Id], [RequestedById], [TimeStamp], [ServiceName], [ServiceMethodName], [StatusCode], [AdditionalData]) VALUES (N'2e938b75-29ed-46a7-b2b1-5b26ad3cd3c5', N'14cce367-07cc-4a5c-bd1e-8c9f7d250b1c', CAST(N'2023-06-29T18:07:56.3379891+00:00' AS DateTimeOffset), N'GeoSearchService', N'GetRandomCityInCountry', 200, NULL)
-
-INSERT [dbo].[GeoDbApiCallLog] ([Id], [RequestedById], [TimeStamp], [ServiceName], [ServiceMethodName], [StatusCode], [AdditionalData]) VALUES (N'4fa5c82d-5302-46aa-8710-5b9e9df8b7d9', N'14cce367-07cc-4a5c-bd1e-8c9f7d250b1c', CAST(N'2023-06-29T16:02:08.5861265+00:00' AS DateTimeOffset), N'GeoSearchService', N'GetRandomCityInCountry', 200, NULL)
-
-INSERT [dbo].[GeoDbApiCallLog] ([Id], [RequestedById], [TimeStamp], [ServiceName], [ServiceMethodName], [StatusCode], [AdditionalData]) VALUES (N'9a70c97a-f649-4d74-9405-61d2bf5ebe0b', N'14cce367-07cc-4a5c-bd1e-8c9f7d250b1c', CAST(N'2023-06-28T20:12:25.8995482+00:00' AS DateTimeOffset), N'GeoSearchService', N'GetRandomCityInCountry', 200, NULL)
-
-INSERT [dbo].[GeoDbApiCallLog] ([Id], [RequestedById], [TimeStamp], [ServiceName], [ServiceMethodName], [StatusCode], [AdditionalData]) VALUES (N'd5ed3f4a-eb56-4c2f-beb5-d89814b86757', N'14cce367-07cc-4a5c-bd1e-8c9f7d250b1c', CAST(N'2023-06-29T15:56:32.8125377+00:00' AS DateTimeOffset), N'GeoSearchService', N'GetRandomCityInCountry', 200, NULL)
 
 INSERT [dbo].[Countries] ([Id], [Iso], [Name], [NiceName], [Iso3], [NumCode], [PhoneCode]) VALUES (N'0ec63092-4d3c-4800-921f-0548f05abe9b', N'CI', N'COTE D''IVOIRE', N'Cote D''Ivoire', N'CIV', 384, 225)
 

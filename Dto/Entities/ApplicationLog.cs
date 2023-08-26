@@ -1,6 +1,6 @@
 ﻿using TravelPickerApp.Models;
 
-namespace TravelPickerApp.DAL.Entities;
+namespace TravelPickerApp.Dto.Entities;
 
 public class ApplicationLog
 {

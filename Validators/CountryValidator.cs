@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TravelPickerApp.DAL;
+using TravelPickerApp.Dto;
 
 namespace TravelPickerApp.Validators;
 

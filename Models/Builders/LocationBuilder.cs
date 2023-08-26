@@ -1,4 +1,4 @@
-﻿using TravelPickerApp.DAL.Entities;
+﻿using TravelPickerApp.Dto.Entities;
 using TravelPickerApp.Exceptions.Location;
 
 namespace TravelPickerApp.Models.Builders;
@@ -15,8 +15,8 @@ public class LocationBuilder
     private Decimal _longitude;
 
     private DateTimeOffset _dateCreated;
-    private DAL.Entities.User _assignedTo;
-    private DAL.Entities.User _createdBy;
+    private Dto.Entities.User _assignedTo;
+    private Dto.Entities.User _createdBy;
     private Country _country;
     private string _region;
     public LocationBuilder WithId(Guid Id)
@@ -48,12 +48,12 @@ public class LocationBuilder
         return this;
     }
 
-    public LocationBuilder AssignedTo(DAL.Entities.User user)
+    public LocationBuilder AssignedTo(Dto.Entities.User user)
     {
         _assignedTo = user;
         return this;
     }
-    public LocationBuilder CreatedBy(DAL.Entities.User user)
+    public LocationBuilder CreatedBy(Dto.Entities.User user)
     {
         _createdBy = user;
         return this;
@@ -68,14 +68,14 @@ public class LocationBuilder
         _region = region;
         return this;
     }
-    public DAL.Entities.Location Build()
+    public Dto.Entities.Location Build()
     {
         if (_country is null || _longitude == default || _longitude == default || _assignedTo is null ||
             string.IsNullOrEmpty(_locationName) || _createdBy is null)
         {
             throw new LocationBuilderException("Cannot build location as not all required fields are set");
         }
-        return new DAL.Entities.Location
+        return new Dto.Entities.Location
         {
             Id = _id,
             LocationName = _locationName,

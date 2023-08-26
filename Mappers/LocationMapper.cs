@@ -1,4 +1,4 @@
-﻿using TravelPickerApp.DAL.Entities;
+﻿using TravelPickerApp.Dto.Entities;
 using TravelPickerApp.Models;
 using TravelPickerApp.Models.GeoSearch;
 using TravelPickerApp.Models.Location;

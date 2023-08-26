@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using TravelPickerApp.DAL;
+using TravelPickerApp.Dto;
 using TravelPickerApp.Mappers;
 using TravelPickerApp.Models;
 using TravelPickerApp.Models.Builders;

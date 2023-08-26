@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TravelPickerApp.DAL.Entities;
+namespace TravelPickerApp.Dto.Entities;
 
 public class User
 {

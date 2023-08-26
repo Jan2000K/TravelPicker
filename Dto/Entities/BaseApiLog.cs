@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
 
-namespace TravelPickerApp.DAL.Entities;
+namespace TravelPickerApp.Dto.Entities;
 
 public class BaseApiLog
 {
