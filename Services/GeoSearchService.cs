@@ -126,9 +126,11 @@ public class GeoSearchService
             }
             else
             {
+                httpClient.Dispose();
                 return fetchedCity;
             }
         }
+        httpClient.Dispose();
         await _logger.LogInformationAsync($"Error while fetching random location with try count of {i}", ActionStatusCode.ActionFailed);
         return new Result<LocationVM>(ActionStatusCode.ActionFailed, null, "Unable to fetch random city");
 
